@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Music Lyrics App</string>
+    <string name="musician">Исполнитель</string>
+    <string name="Song">Песня</string>
+    <string name="search">Поиск</string>
+    <string name="history">История запросов</string>
+</resources>

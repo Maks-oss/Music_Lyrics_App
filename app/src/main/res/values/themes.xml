@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="MusicLyricsApp" parent="Theme.MaterialComponents.NoActionBar">
+
+        <item name="android:statusBarColor" tools:targetApi="l">@color/primaryDarkColor</item>
+        <!-- Customize your theme here. -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.App.SmallComponent</item>
+
+        <item name="colorSurface">@color/primaryColor</item>
+        <item name="android:colorBackground">@color/primaryLightColor</item>
+    </style>
+
+
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+       <item name="cornerFamily">cut</item>
+
+    </style>
+
+</resources>
