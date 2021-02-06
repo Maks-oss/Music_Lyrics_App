@@ -15,9 +15,9 @@ class MainActivity : AppCompatActivity() {
             val mainFragment = FragmentFactory.createFragment(MainFragment())
             manager.replace(R.id.frame, mainFragment).commit()
         }
-        findViewById<Button>(R.id.history).setOnClickListener {
-            TODO() //сделать переход между фрагментами
-        }
+//        findViewById<Button>(R.id.history).setOnClickListener {
+//            TODO() //сделать переход между фрагментами
+//        }
     }
 
 
