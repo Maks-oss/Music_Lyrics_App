@@ -38,7 +38,7 @@ class MainFragment : Fragment() {
 
         binding.history.setOnClickListener {
             fragmentManager!!.beginTransaction().replace(R.id.frame, SongHistoryFragment())
-                    .addToBackStack(null).commit()
+                .addToBackStack(null).commit()
 
         }
         return binding.getRoot()

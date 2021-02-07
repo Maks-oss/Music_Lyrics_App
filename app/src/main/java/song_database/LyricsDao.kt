@@ -1,13 +1,13 @@
 package song_database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface LyricsDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLyrics(songLyrics: SongLyrics)
     @Query("SELECT * FROM songLyrics")
     suspend fun getLyricsSongs():List<SongLyrics>
+    @Delete
+    suspend fun deleteLyricsSong(songLyrics: SongLyrics)
 }

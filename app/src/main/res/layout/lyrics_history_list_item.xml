@@ -33,7 +33,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <ImageButton
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/recycler_arrow"
                 android:layout_width="40dp"
                 android:layout_height="50dp"
