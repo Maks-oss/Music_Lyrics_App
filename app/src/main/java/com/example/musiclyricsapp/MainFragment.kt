@@ -25,11 +25,18 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.lyrics_fragment, container, false)
 
-        binding = DataBindingUtil.inflate(inflater,R.layout.lyrics_fragment, container, false)
         lyricsService = Common.retrofitService
         binding.search.setOnClickListener {
             getSong()
+        }
+
+        binding.history.setOnClickListener {
+            fragmentManager?.apply{
+                    beginTransaction().replace(R.id.frame, SongHistoryFragment())
+                    .addToBackStack(null).commit()
+            }
         }
         return binding.getRoot()
     }
@@ -39,17 +46,26 @@ class MainFragment : Fragment() {
             lyricsService.getLyrics(musician.text.toString(), songName.text.toString())
                 .enqueue(object : Callback<SongLyrics> {
                     override fun onFailure(call: Call<SongLyrics>, t: Throwable) {
-                        Snackbar.make(root,"Что-то не так",Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(root, "Что-то не так", Snackbar.LENGTH_LONG).show()
                     }
 
-                    override fun onResponse(call: Call<SongLyrics>, response: Response<SongLyrics>) {
-                        val songLyrics=response.body()
-                        if (songLyrics?.lyrics.isNullOrEmpty()){
-                            Snackbar.make(root,"По вашему запросу не было найдено совпадений",Snackbar.LENGTH_LONG).show()
+                    override fun onResponse(
+                        call: Call<SongLyrics>,
+                        response: Response<SongLyrics>
+                    ) {
+                        val songLyrics = response.body()
+                        if (songLyrics?.lyrics.isNullOrEmpty()) {
+                            Snackbar.make(
+                                root,
+                                "По вашему запросу не было найдено совпадений",
+                                Snackbar.LENGTH_LONG
+                            ).show()
                         }
-                        songText.text =songLyrics?.lyrics
+                        songText.text = songLyrics?.lyrics
                     }
                 })
         }
     }
+
+
 }
