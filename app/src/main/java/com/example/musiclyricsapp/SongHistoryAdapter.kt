@@ -7,7 +7,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musiclyricsapp.databinding.LyricsHistoryListItemBinding
-import lyricsapi.SongLyrics
+import song_database.SongLyrics
 
 class SongHistoryAdapter(private val list:List<SongLyrics> ):
     RecyclerView.Adapter<SongHistoryAdapter.Adapter>() {

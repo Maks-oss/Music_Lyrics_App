@@ -9,8 +9,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val mainFragment = FragmentFactory.createFragment(MainFragment())
-        supportFragmentManager.beginTransaction().replace(R.id.frame, mainFragment).addToBackStack(null).commit()
+
+        supportFragmentManager.beginTransaction().replace(R.id.frame, MainFragment()).addToBackStack(null).commit()
     }
 
 
