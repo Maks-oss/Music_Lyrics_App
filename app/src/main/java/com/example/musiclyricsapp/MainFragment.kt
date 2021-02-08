@@ -4,18 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.musiclyricsapp.databinding.LyricsFragmentBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
-import lyricsapi.Common
-import lyricsapi.LyricsAPI
+import lyrics_api.Common
+import lyrics_api.LyricsAPI
+import lyrics_database.DbAccess
+import lyrics_database.SongLyrics
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import song_database.DbAccess
-import song_database.SongLyrics
 
 class MainFragment : Fragment() {
 
@@ -29,9 +30,19 @@ class MainFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.lyrics_fragment, container, false)
         lyricsService = Common.retrofitService
+
         DbAccess.setDatabaseContext(requireContext())
-
-
+        val db = DbAccess.getDatabase()
+        binding.musician.setAdapter(ArrayAdapter<String>(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            runBlocking { db.getArtistsName().toTypedArray() }
+        ))
+        binding.songName.setAdapter(ArrayAdapter<String>(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            runBlocking { db.getSongssName().toTypedArray() }
+        ))
         binding.search.setOnClickListener {
             getSong()
         }
@@ -48,8 +59,7 @@ class MainFragment : Fragment() {
         binding.apply {
             val artist = musician.text.toString()
             val song = songName.text.toString()
-            val db = DbAccess.getDatabase().lyricsDao()
-
+            val db = DbAccess.getDatabase()
             lyricsService.getLyrics(artist, song)
                 .enqueue(object : Callback<SongLyrics> {
                     override fun onFailure(call: Call<SongLyrics>, t: Throwable) {

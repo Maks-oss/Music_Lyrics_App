@@ -1,4 +1,4 @@
-package song_database
+package lyrics_database
 
 import androidx.room.*
 
@@ -10,4 +10,8 @@ interface LyricsDao {
     suspend fun getLyricsSongs():List<SongLyrics>
     @Delete
     suspend fun deleteLyricsSong(songLyrics: SongLyrics)
+    @Query("SELECT artistName FROM songLyrics")
+    suspend fun getArtistsName():List<String>
+    @Query("SELECT songName FROM songLyrics")
+    suspend fun getSongssName():List<String>
 }

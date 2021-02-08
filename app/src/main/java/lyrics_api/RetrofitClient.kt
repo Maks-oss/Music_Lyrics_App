@@ -1,4 +1,4 @@
-package lyricsapi
+package lyrics_api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

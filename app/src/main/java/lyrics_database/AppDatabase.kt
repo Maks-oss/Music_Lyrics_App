@@ -1,4 +1,4 @@
-package song_database
+package lyrics_database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

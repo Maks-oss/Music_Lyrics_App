@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.runBlocking
-import song_database.DbAccess
-import song_database.SongLyrics
+import lyrics_database.DbAccess
+import lyrics_database.SongLyrics
 
 class SongHistoryFragment :Fragment() {
     lateinit var recycler: RecyclerView
@@ -20,7 +20,7 @@ class SongHistoryFragment :Fragment() {
         val view=inflater.inflate(R.layout.lyrics_history_fragment,container,false)
         recycler=view.findViewById(R.id.recycler)
         runBlocking {
-            val lyricsList=DbAccess.getDatabase().lyricsDao().getLyricsSongs()
+            val lyricsList=DbAccess.getDatabase().getLyricsSongs()
             val adapter=SongHistoryAdapter(lyricsList as ArrayList<SongLyrics>)
             recycler.adapter=adapter
         }

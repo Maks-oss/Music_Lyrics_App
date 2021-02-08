@@ -1,4 +1,4 @@
-package song_database
+package lyrics_database
 
 import android.content.Context
 import androidx.room.Room
@@ -9,5 +9,5 @@ object DbAccess {
         db = Room.databaseBuilder(context, AppDatabase::class.java, "songLyrics").build()
     }
 
-    fun getDatabase() = db
+    fun getDatabase() = db.lyricsDao()
 }

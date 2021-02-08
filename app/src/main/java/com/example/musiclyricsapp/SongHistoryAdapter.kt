@@ -10,8 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musiclyricsapp.databinding.LyricsHistoryListItemBinding
 import kotlinx.coroutines.runBlocking
-import song_database.DbAccess
-import song_database.SongLyrics
+import lyrics_database.DbAccess
+import lyrics_database.SongLyrics
 import java.lang.reflect.Method
 
 
@@ -29,14 +29,12 @@ class SongHistoryAdapter(private val list: ArrayList<SongLyrics>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Adapter {
         val inflater = LayoutInflater.from(parent.context)
         context = LayoutInflater.from(parent.context).context
-        //data binding
         val binder = DataBindingUtil.inflate<LyricsHistoryListItemBinding>(
             inflater,
             R.layout.lyrics_history_list_item,
             parent,
             false
         )
-        //apply function listen to our view
         return Adapter(binder.root).listen { pos, _ ->
             showMenu(binder.root, R.menu.popup_menu, pos)
         }
@@ -87,9 +85,8 @@ class SongHistoryAdapter(private val list: ArrayList<SongLyrics>) :
 
         popup.setOnMenuItemClickListener {
             runBlocking {
-                DbAccess.getDatabase().lyricsDao().deleteLyricsSong(list.removeAt(position))
+                DbAccess.getDatabase().deleteLyricsSong(list.removeAt(position))
             }
-            notifyDataSetChanged()
             notifyItemRemoved(position)
             true
         }

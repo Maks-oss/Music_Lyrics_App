@@ -1,4 +1,4 @@
-package lyricsapi
+package lyrics_api
 
 object Common {
     private const val BASE_URL = "https://api.lyrics.ovh/v1/"

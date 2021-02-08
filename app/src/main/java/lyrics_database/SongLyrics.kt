@@ -1,4 +1,4 @@
-package song_database
+package lyrics_database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
