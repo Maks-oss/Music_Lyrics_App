@@ -5,20 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.databinding.DataBindingUtil
 import com.example.musiclyricsapp.core.ScopeFragment
 import com.example.musiclyricsapp.databinding.LyricsFragmentBinding
 import com.example.musiclyricsapp.navigation.Navigator
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import lyrics_api.Common
 import lyrics_api.LyricsAPI
 import lyrics_database.SongLyrics
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import kotlin.properties.Delegates
 
 class MainFragment : ScopeFragment(R.layout.lyrics_fragment) {
@@ -52,55 +48,49 @@ class MainFragment : ScopeFragment(R.layout.lyrics_fragment) {
     private fun getArtistNameSuggestion() {
         scope.launch {
             val list = db.getArtistsName().toTypedArray() //io
-            withContext(Dispatchers.Main) {
-                binding.musician.setAdapter( // main
-                    ArrayAdapter<String>(
-                        requireContext(),
-                        android.R.layout.simple_dropdown_item_1line,
-                        list
-                    )
-                )
-            }
+            applySuggestionToView(binding.musician, list)
         }
     }
 
     private fun getSongNameSuggestion() {
         scope.launch {
             val list = db.getSongssName().toTypedArray()
-            withContext(Dispatchers.Main) {
-                binding.songName.setAdapter(
-                    ArrayAdapter<String>(
-                        requireContext(),
-                        android.R.layout.simple_dropdown_item_1line,
-                        list
-                    )
+            applySuggestionToView(binding.songName, list)
+        }
+    }
+
+    private suspend fun applySuggestionToView(
+        view: AppCompatAutoCompleteTextView,
+        list: Array<String>
+    ) {
+        toMain {
+            view.setAdapter(
+                ArrayAdapter<String>(
+                    requireContext(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    list
                 )
-            }
+            )
         }
     }
 
     private fun getSong() {
-
         val artist = binding.musician.text.toString()
         val song = binding.songName.text.toString()
 
-        lyricsService.getLyrics(artist, song).enqueue(object : Callback<SongLyrics> {
-            override fun onFailure(call: Call<SongLyrics>, t: Throwable) =
-                showSnack("Что-то не так")
-
-            override fun onResponse(call: Call<SongLyrics>, response: Response<SongLyrics>) {
-                val songLyrics = response.body()
-
-                if (songLyrics == null || songLyrics.lyrics.isEmpty()) {
+        scope.launch {
+            try {
+                val songLyrics: SongLyrics = lyricsService.getLyrics(artist, song)
+                if (songLyrics.lyrics.isEmpty()) {
                     showSnack("По вашему запросу не было найдено совпадений")
                 } else {
-                    binding.songText.text = songLyrics.lyrics
-                    scope.launch {
-                        db.insertLyrics(SongLyrics(songLyrics.lyrics, song, artist))
-                    }
+                    toMain { binding.songText.text = songLyrics.lyrics }
+                    db.insertLyrics(SongLyrics(songLyrics.lyrics, song, artist))
                 }
+            } catch (exp: Exception) {
+                showSnack("Что-то не так")
             }
-        })
+        }
     }
 
     private fun showSnack(message: String) {
