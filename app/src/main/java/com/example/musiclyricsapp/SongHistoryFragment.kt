@@ -1,29 +1,29 @@
 package com.example.musiclyricsapp
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.runBlocking
-import lyrics_database.DbAccess
+import com.example.musiclyricsapp.core.ScopeFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import lyrics_database.SongLyrics
+import kotlin.properties.Delegates
 
-class SongHistoryFragment :Fragment() {
-    lateinit var recycler: RecyclerView
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view=inflater.inflate(R.layout.lyrics_history_fragment,container,false)
-        recycler=view.findViewById(R.id.recycler)
-        runBlocking {
-            val lyricsList=DbAccess.getDatabase().getLyricsSongs()
-            val adapter=SongHistoryAdapter(lyricsList as ArrayList<SongLyrics>)
-            recycler.adapter=adapter
+class SongHistoryFragment : ScopeFragment(R.layout.lyrics_history_fragment) {
+
+    private var recycler: RecyclerView by Delegates.notNull()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recycler = view.findViewById(R.id.recycler)
+
+        scope.launch {
+            val lyricsList = db.getLyricsSongs()
+            val adapter = SongHistoryAdapter(lyricsList as ArrayList<SongLyrics>)
+            withContext(Dispatchers.Main) {
+                recycler.adapter = adapter
+            }
         }
-        return view
     }
 }
